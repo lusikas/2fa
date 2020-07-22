@@ -84,12 +84,14 @@ import (
 )
 
 var (
-	flagAdd  = flag.Bool("add", false, "add a key")
-	flagList = flag.Bool("list", false, "list keys")
-	flagHotp = flag.Bool("hotp", false, "add key as HOTP (counter-based) key")
-	flag7    = flag.Bool("7", false, "generate 7-digit code")
-	flag8    = flag.Bool("8", false, "generate 8-digit code")
-	flagClip = flag.Bool("clip", false, "copy code to the clipboard")
+	defaultPath = filepath.Join(os.Getenv("HOME"), ".2fa")
+	flagAdd     = flag.Bool("add", false, "add a key")
+	flagList    = flag.Bool("list", false, "list keys")
+	flagHotp    = flag.Bool("hotp", false, "add key as HOTP (counter-based) key")
+	flag7       = flag.Bool("7", false, "generate 7-digit code")
+	flag8       = flag.Bool("8", false, "generate 8-digit code")
+	flagClip    = flag.Bool("clip", false, "copy code to the clipboard")
+	flagPath    = flag.String("path", defaultPath, "path to Keychain file")
 )
 
 func usage() {
@@ -106,7 +108,7 @@ func main() {
 	flag.Usage = usage
 	flag.Parse()
 
-	k := readKeychain(filepath.Join(os.Getenv("HOME"), ".2fa"))
+	k := readKeychain(*flagPath)
 
 	if *flagList {
 		if flag.NArg() != 0 {
